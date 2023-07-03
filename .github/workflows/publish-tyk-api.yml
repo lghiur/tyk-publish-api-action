@@ -31,6 +31,9 @@ jobs:
         PARENT_COMMIT_SHA: ${{ steps.get_parent_commit_sha.outputs.parent_commit_sha }}
       run: |
         echo "start iterating"
+        echo $PARENT_COMMIT_SHA
+        echo HEAD
+        echo $(git diff --name-only $PARENT_COMMIT_SHA HEAD)
         for file in $(git diff --name-only $PARENT_COMMIT_SHA HEAD); do
             if [[ $file == *"/"* ]]; then
               continue

@@ -150,7 +150,7 @@
         "enum": [
           "KTP",
           "NPWP",
-          "SELFIE",
+          "SELFIE",g
           "LIVENESS",
           "KK",
           "SELFIE_WITH_KTP",
@@ -161,7 +161,7 @@
         "type": "string",
         "enum": [
           "2000000",
-          "2020000"
+          "2020001"
         ]
       }
     }
