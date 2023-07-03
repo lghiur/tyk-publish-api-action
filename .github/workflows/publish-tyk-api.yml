@@ -49,10 +49,10 @@ jobs:
             echo "Endpoint: $endpoint"
           
           # Check if API exists with a GET request
-          response=$(curl -s -o /dev/null -w "%{http_code}" -X GET -H "Authorization: Bearer $TOKEN" "${BASE_URL}${endpoint}")
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X GET -H "Authorization: $TOKEN" "${BASE_URL}${endpoint}")
           if [ $response -eq 200 ]; then
             echo "API with ID $filename already exists. Performing PUT request."
-            response=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${endpoint}${QUERY_PARAMS}")
+            response=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH -H "Authorization: $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${endpoint}${QUERY_PARAMS}")
             if [ $response -eq 200 ]; then
               echo "API has been patched with a new OAS request succeeded."
             else
@@ -60,7 +60,7 @@ jobs:
             fi
           else
             echo "API with ID $filename does not exist. Performing POST request."
-            response=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${importEndpoint}${QUERY_PARAMS}")
+            response=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${importEndpoint}${QUERY_PARAMS}")
             if [ $response -eq 200 ]; then
               echo "Import of OAS request succeeded."
             else
