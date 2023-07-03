@@ -63,6 +63,7 @@ jobs:
             fi
           else
             echo "API with ID $filename does not exist. Performing IMPORT request."
+            echo "${BASE_URL}${importEndpoint}${QUERY_PARAMS}"
             response=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${importEndpoint}${QUERY_PARAMS}")
             if [ $response -eq 200 ]; then
               echo "Import of OAS request succeeded."
