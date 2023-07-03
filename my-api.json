@@ -150,7 +150,7 @@
         "enum": [
           "KTP",
           "NPWP",
-          "SELFIE",g
+          "SELFIE",
           "LIVENESS",
           "KK",
           "SELFIE_WITH_KTP",

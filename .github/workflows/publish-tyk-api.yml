@@ -33,7 +33,7 @@ jobs:
         PARENT_COMMIT_SHA: ${{ steps.get_parent_commit_sha.outputs.parent_commit_sha }}
       run: |
         echo "start iterating"
-        echo $PARENT_COMMIT_SHA
+        echo $PARENT_COMMIT_SHAg
         echo HEAD
         git diff-tree --no-commit-id --name-only -r $PARENT_COMMIT_SHA
         for file in $(git diff-tree --no-commit-id --name-only -r $PARENT_COMMIT_SHA); do
@@ -62,12 +62,13 @@ jobs:
               echo "API Patch request failed with status code $response."
             fi
           else
-            echo "API with ID $filename does not exist. Performing POST request."
+            echo "API with ID $filename does not exist. Performing IMPORT request."
             response=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${importEndpoint}${QUERY_PARAMS}")
             if [ $response -eq 200 ]; then
               echo "Import of OAS request succeeded."
             else
               echo "Import of OAS request failed with status code $response."
+              echo "Response: $response"
             fi
           fi
         done
