@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Consumer OB - BI SNAP Comply",
+    "version": "2.0",
+    "license": {
+      "name": "CC BY-NC-ND 4.0 (Dev Purpose)",
+      "url": "https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://opb.banksampoerna.test"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Document Management",
+      "description": "Document management scope for partner / end user"
+    }
+  ],
+  "paths": {
+    "/registration/v2.0/documents": {
+      "post": {
+        "security": [
+          {}
+        ],
+        "tags": [
+          "Document Management"
+        ],
+        "operationId": "createDocument",
+        "description": "Create document",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Content-Type"
+          },
+          {
+            "$ref": "#/components/parameters/X-TIMESTAMP"
+          },
+          {
+            "$ref": "#/components/parameters/X-CLIENT-KEY"
+          },
+          {
+            "$ref": "#/components/parameters/X-SIGNATURE"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Document upload is already scheduled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDocumentResponseBody"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Requesting for document upload"
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Content-Type": {
+        "in": "header",
+        "name": "Content-Type",
+        "schema": {
+          "$ref": "#/components/schemas/CreateDocumentRequestBody"
+        }
+      },
+      "X-TIMESTAMP": {
+        "in": "header",
+        "name": "X-TIMESTAMP",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "X-CLIENT-KEY": {
+        "in": "header",
+        "name": "X-CLIENT-KEY",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "X-SIGNATURE": {
+        "in": "header",
+        "name": "X-SIGNATURE",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "CreateDocumentRequestBody": {
+        "type": "object",
+        "properties": {
+          "reference_id": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TypeOfIdentity"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateDocumentResponseBody": {
+        "type": "object",
+        "properties": {
+          "responseCode": {
+            "$ref": "#/components/schemas/ResponseCodeList"
+          },
+          "responseMessage": {
+            "type": "string"
+          },
+          "uploadUrl": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "TypeOfIdentity": {
+        "type": "string",
+        "enum": [
+          "KTP",
+          "NPWP",
+          "SELFIE",
+          "LIVENESS",
+          "KK",
+          "SELFIE_WITH_KTP",
+          "LIVENESS_NOD"
+        ]
+      },
+      "ResponseCodeList": {
+        "type": "string",
+        "enum": [
+          "2000000",
+          "2020000"
+        ]
+      }
+    }
+  }
+}

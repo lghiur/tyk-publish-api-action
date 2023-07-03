@@ -1,0 +1,58 @@
+name: Process Commits
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  process_commits:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up environment variables
+      run: |
+        echo "TOKEN=${{ secrets.API_TOKEN }}" >> $GITHUB_ENV
+        echo "BASE_URL=${{ secrets.BASE_API_URL }}" >> $GITHUB_ENV
+
+    - name: Iterate over committed files and make requests
+      env:
+        TOKEN: ${{ secrets.API_TOKEN }}
+        BASE_URL: ${{ env.BASE_URL }}
+        QUERY_PARAMS: ${{ env.QUERY_PARAMS }}
+      run: |
+        for file in $(git diff --name-only HEAD^ HEAD); do
+            if [[ $file == *"/"* ]]; then
+              continue
+            fi
+            filename=$(basename -- "$file")
+            filename="${filename%.*}"
+            echo "Processing file: $file"
+            echo "Filename: $filename"
+            importEndpoint="/api/apis/oas/import"
+            endpoint="/api/apis/$filename"
+            echo "Endpoint: $endpoint"
+          
+          # Check if API exists with a GET request
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X GET -H "Authorization: Bearer $TOKEN" "${BASE_URL}${endpoint}")
+          if [ $response -eq 200 ]; then
+            echo "API with ID $filename already exists. Performing PUT request."
+            response=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${endpoint}${QUERY_PARAMS}")
+            if [ $response -eq 200 ]; then
+              echo "API has been patched with a new OAS request succeeded."
+            else
+              echo "API Patch request failed with status code $response."
+            fi
+          else
+            echo "API with ID $filename does not exist. Performing POST request."
+            response=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${importEndpoint}${QUERY_PARAMS}")
+            if [ $response -eq 200 ]; then
+              echo "Import of OAS request succeeded."
+            else
+              echo "Import of OAS request failed with status code $response."
+            fi
+          fi
+        done
