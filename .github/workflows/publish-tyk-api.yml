@@ -26,7 +26,7 @@ jobs:
       run: |
         echo "start iterating"
         echo $(git diff --name-only HEAD^ HEAD)
-        for file in $(git diff --name-only HEAD^ HEAD); do
+        for file in $(git diff --name-only HEAD~1 HEAD); do
             if [[ $file == *"/"* ]]; then
               continue
             fi
