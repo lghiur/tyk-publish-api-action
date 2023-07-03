@@ -49,7 +49,10 @@ jobs:
             echo "Endpoint: $endpoint"
           
           # Check if API exists with a GET request
+          echo "Sending GET request to $BASE_URL$endpoint"
           response=$(curl -s -o /dev/null -w "%{http_code}" -X GET -H "Authorization: $TOKEN" "${BASE_URL}${endpoint}")
+          echo "Response: $response"
+
           if [ $response -eq 200 ]; then
             echo "API with ID $filename already exists. Performing PUT request."
             response=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH -H "Authorization: $TOKEN" -H "Content-Type: application/json" -d "$content" "${BASE_URL}${endpoint}${QUERY_PARAMS}")
