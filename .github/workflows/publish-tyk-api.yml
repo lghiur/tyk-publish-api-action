@@ -18,15 +18,20 @@ jobs:
         echo "TOKEN=${{ secrets.API_TOKEN }}" >> $GITHUB_ENV
         echo "BASE_URL=${{ secrets.BASE_API_URL }}" >> $GITHUB_ENV
 
+    - name: Get parent commit SHA
+      id: get_parent_commit_sha
+      run: |
+        echo "parent_commit_sha=$(git rev-parse HEAD^)" >> $GITHUB_OUTPUT
+
     - name: Iterate over committed files and make requests
       env:
         TOKEN: ${{ secrets.API_TOKEN }}
         BASE_URL: ${{ env.BASE_URL }}
         QUERY_PARAMS: ${{ env.QUERY_PARAMS }}
+        PARENT_COMMIT_SHA: ${{ steps.get_parent_commit_sha.outputs.parent_commit_sha }}
       run: |
         echo "start iterating"
-        echo $(git diff --name-only HEAD^ HEAD)
-        for file in $(git diff --name-only HEAD~1 HEAD); do
+        for file in $(git diff --name-only $PARENT_COMMIT_SHA HEAD); do
             if [[ $file == *"/"* ]]; then
               continue
             fi
