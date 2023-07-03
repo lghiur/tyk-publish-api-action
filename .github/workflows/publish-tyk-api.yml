@@ -1,4 +1,4 @@
-name: Process Commits
+name: Update Tyk OAS APIs
 
 on:
   push:
@@ -24,6 +24,8 @@ jobs:
         BASE_URL: ${{ env.BASE_URL }}
         QUERY_PARAMS: ${{ env.QUERY_PARAMS }}
       run: |
+        echo "start iterating"
+        echo $(git diff --name-only HEAD^ HEAD)
         for file in $(git diff --name-only HEAD^ HEAD); do
             if [[ $file == *"/"* ]]; then
               continue

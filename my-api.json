@@ -160,7 +160,7 @@
       "ResponseCodeList": {
         "type": "string",
         "enum": [
-          "2000000",
+          "2000001",
           "2020000"
         ]
       }
