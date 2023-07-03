@@ -17,8 +17,8 @@ jobs:
 
     - name: Set up environment variables
       run: |
-        echo "TOKEN=7ccfd6b0c27a4cc3682e0d157990ae2b" >> $GITHUB_ENV
-        echo "BASE_URL=https://9b15-82-77-245-120.ngrok-free.app" >> $GITHUB_ENV
+        echo "TOKEN=${{ secrets.API_TOKEN }}" >> $GITHUB_ENV
+        echo "BASE_URL=${{ secrets.BASE_API_URL }}" >> $GITHUB_ENV
 
     - name: Get parent commit SHA
       id: get_parent_commit_sha
@@ -27,7 +27,7 @@ jobs:
 
     - name: Iterate over committed files and make requests
       env:
-        TOKEN: 7ccfd6b0c27a4cc3682e0d157990ae2b
+        TOKEN: ${{ secrets.API_TOKEN }}
         BASE_URL: ${{ env.BASE_URL }}
         QUERY_PARAMS: ${{ env.QUERY_PARAMS }}
         PARENT_COMMIT_SHA: ${{ steps.get_parent_commit_sha.outputs.parent_commit_sha }}
@@ -40,6 +40,9 @@ jobs:
             if [[ $file == *"/"* ]]; then
               continue
             fi
+            content=$(cat "$file")
+            echo "Processing file: $file"
+            echo "File content: $content"
             filename=$(basename -- "$file")
             filename="${filename%.*}"
             echo "Processing file: $file"
