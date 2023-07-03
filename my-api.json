@@ -19,7 +19,56 @@
       "description": "Document management scope for partner / end user"
     }
   ],
-  "paths": {
+  "paths": { 
+    "/registration/v3.0/documents": {
+      "post": {
+        "security": [
+          {}
+        ],
+        "tags": [
+          "Document Management"
+        ],
+        "operationId": "createDocument",
+        "description": "Create document",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Content-Type"
+          },
+          {
+            "$ref": "#/components/parameters/X-TIMESTAMP"
+          },
+          {
+            "$ref": "#/components/parameters/X-CLIENT-KEY"
+          },
+          {
+            "$ref": "#/components/parameters/X-SIGNATURE"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Document upload is already scheduled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDocumentResponseBody"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Requesting for document upload"
+      }
+    },
     "/registration/v2.0/documents": {
       "post": {
         "security": [
